@@ -1342,7 +1342,6 @@ contract PepperBirdToken is IERC20Extended, Auth {
             return _basicTransfer(sender, recipient, amount);
         }
 
-        //checkTxLimit(sender, amount);
 
         if (shouldSwapBack()) {
             swapBack();
