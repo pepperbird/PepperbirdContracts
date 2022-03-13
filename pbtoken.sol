@@ -1,7 +1,7 @@
 // PEPPERBIRD TOKEN BEP 20 Source Code
-// V001
+// BUILD 002
 // pepperbird.finance
-// 3/12/2022
+// 3/13/2022
 //////////////////////////////////////////////////////////////
 
 
@@ -271,7 +271,6 @@ interface IERC20Extended {
 
 
 // File contracts/interfaces/IUniswapV2Factory.sol
-
 
 
 interface IUniswapV2Factory {
@@ -590,6 +589,7 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
 
 
 
+
 contract DividendDistributor is IDividendDistributor {
     using SafeMath for uint256;
 
@@ -776,6 +776,7 @@ contract DividendDistributor is IDividendDistributor {
 
 
 // File contracts/library/DistributionFactory.sol
+
 
 
 
@@ -1015,6 +1016,7 @@ contract DistributorFactory {
 
 
 
+
 /**
   Inital Min: 100,000,000,000,000 100T
 */
@@ -1226,7 +1228,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
     }
 
     function checkTxLimit(address sender, uint256 amount) internal view {
-        require(!(amount <= _maxTxAmount || isTxLimitExempt[sender]), "TX Limit Exceeded");
+        // if (!isTxLimitExempt[sender]) { require((amount <= _maxTxAmount || isTxLimitExempt[sender]), "TX Limit Exceeded"); }
     }
 
     function setTxLimit(uint256 amount) external authorized {
@@ -1328,7 +1330,6 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     function _getPairContract() internal view returns (address) {
         address pairContract = IUniswapV2Factory(router.factory()).getPair(address(this), router.WETH());
-
         return pairContract;
     }
 
@@ -1341,7 +1342,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
             return _basicTransfer(sender, recipient, amount);
         }
 
-        checkTxLimit(sender, amount);
+        //checkTxLimit(sender, amount);
 
         if (shouldSwapBack()) {
             swapBack();
