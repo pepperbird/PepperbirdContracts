@@ -1,18 +1,16 @@
 // PEPPERBIRD TOKEN BEP 20 Source Code
-// BUILD 002
+// BUILD 003
 // pepperbird.finance
-// 3/13/2022
+// 3/16/2022
 //////////////////////////////////////////////////////////////
 
-
-// Sources flattened with hardhat v2.8.4 https://hardhat.org
 
 // File @openzeppelin/contracts/utils/math/SafeMath.sol@v4.5.0
 
 // SPDX-License-Identifier: MIT
 // OpenZeppelin Contracts v4.4.1 (utils/math/SafeMath.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity =0.8.9;
 
 // CAUTION
 // This version of SafeMath should only be used with Solidity 0.8 or later,
@@ -241,7 +239,6 @@ library SafeMath {
 // File contracts/interfaces/IERC20Extended.sol
 
 
-
 interface IERC20Extended {
     function totalSupply() external view returns (uint256);
 
@@ -271,6 +268,7 @@ interface IERC20Extended {
 
 
 // File contracts/interfaces/IUniswapV2Factory.sol
+
 
 
 interface IUniswapV2Factory {
@@ -587,9 +585,6 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
 // File contracts/library/DividendDistributor.sol
 
 
-
-
-
 contract DividendDistributor is IDividendDistributor {
     using SafeMath for uint256;
 
@@ -778,8 +773,6 @@ contract DividendDistributor is IDividendDistributor {
 // File contracts/library/DistributionFactory.sol
 
 
-
-
 contract DistributorFactory {
     using SafeMath for uint256;
     address _token;
@@ -837,8 +830,8 @@ contract DistributorFactory {
     }
 
     function addCustomReflections(address _owner, address[] memory _reflectionAddresses) external returns (bool) {
-        require(!(_reflectionAddresses.length > maxCustomReflections), "Max Custom Reflection Exceeded.");
-        require(!customReflectionsExist(_reflectionAddresses), "Address not in master list.");
+        require((_reflectionAddresses.length <= maxCustomReflections), "Max Custom Reflection Exceeded.");
+        require(customReflectionsExist(_reflectionAddresses), "Address not in master list.");
 
         uint256 arrayLength = _reflectionAddresses.length;
         // Clean reflection array to hold new set.
@@ -930,9 +923,10 @@ contract DistributorFactory {
         bool state = true;
         if (customReflectionsOn == false) {
             state = false;
-        }
-        if (customReflectionMapping[_shareholder].exists == false) {
-            state = false;
+        } else {
+            if (customReflectionMapping[_shareholder].exists == false) {
+                state = false;
+            }
         }
         return state;
     }
@@ -993,12 +987,12 @@ contract DistributorFactory {
         maxCustomReflections = _maxReflections;
     }
 
-    function getIsCustomReflectionActive() public view returns (bool) {
+    function isCustomReflectionActive() public view returns (bool) {
         return customReflectionsOn;
     }
 
-    function setCustomReflectionState(bool _customReflectionState) external onlyToken {
-        customReflectionsOn = _customReflectionState;
+    function setCustomReflectionToOn(bool state) external onlyToken {
+        customReflectionsOn = state;
     }
 
     function setDistributionCriteria(
@@ -1014,9 +1008,6 @@ contract DistributorFactory {
 // File contracts/PepperBirdToken.sol
 
 
-
-
-
 /**
   Inital Min: 100,000,000,000,000 100T
 */
@@ -1025,7 +1016,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
     event Log(string message);
     using SafeMath for uint256;
 
-    uint256 public constant VERSION = 1;
+    string public constant VERSION = "2";
 
     address private constant DEAD = address(0xdead);
     address private constant ZERO = address(0);
@@ -1035,15 +1026,6 @@ contract PepperBirdToken is IERC20Extended, Auth {
     string private _symbol;
     uint256 private _totalSupply;
 
-    address public rewardToken;
-    address public rewardTokenTwo;
-    address public rewardTokenThree;
-
-    bool public rewardTokenActive;
-    bool public rewardTokenTwoActive;
-    bool public rewardTokenThreeActive;
-
-    uint256 public _maxTxAmount = _totalSupply.div(400); // 0.25%
     IUniswapV2Router02 public router;
     address public pair;
     address public autoLiquidityReceiver;
@@ -1215,25 +1197,16 @@ contract PepperBirdToken is IERC20Extended, Auth {
         distributor.setMaxUserReflection(amount);
     }
 
-    function getIsCustomReflectionAction() external view returns (bool) {
-        return distributor.getIsCustomReflectionActive();
+    function isCustomReflectionActive() external view returns (bool) {
+        return distributor.isCustomReflectionActive();
     }
 
-    function setCustomReflectionState(bool state) external authorized {
-        distributor.setCustomReflectionState(state);
+    function setCustomReflectionToOn(bool state) external authorized {
+        distributor.setCustomReflectionToOn(state);
     }
 
     function deleteDistributor(address _BEP_TOKEN) external authorized {
         distributor.deleteDistributor(_BEP_TOKEN);
-    }
-
-    function checkTxLimit(address sender, uint256 amount) internal view {
-        // if (!isTxLimitExempt[sender]) { require((amount <= _maxTxAmount || isTxLimitExempt[sender]), "TX Limit Exceeded"); }
-    }
-
-    function setTxLimit(uint256 amount) external authorized {
-        require(amount >= _totalSupply / 1000);
-        _maxTxAmount = amount;
     }
 
     function getDistributersBEP20Keys() external view returns (address[] memory) {
@@ -1342,7 +1315,6 @@ contract PepperBirdToken is IERC20Extended, Auth {
             return _basicTransfer(sender, recipient, amount);
         }
 
-
         if (shouldSwapBack()) {
             swapBack();
         }
@@ -1393,7 +1365,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     /// @dev Setting the version as a function so that it can be overriden
     function version() public pure virtual returns (string memory) {
-        return "1";
+        return VERSION;
     }
 
     function getChainID() external view returns (uint256) {
@@ -1657,3 +1629,4 @@ contract PepperBirdToken is IERC20Extended, Auth {
         _setAllowance(holder, spender, wad);
     }
 }
+
