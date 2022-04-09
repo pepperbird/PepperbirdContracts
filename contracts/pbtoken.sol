@@ -1,7 +1,7 @@
 // PEPPERBIRD TOKEN BEP 20 Source Code
-// BUILD 004
+// BUILD 005
 // pepperbird.finance
-// 4/08/2022
+// 4/09/2022
 //////////////////////////////////////////////////////////////
 
 // SPDX-License-Identifier: MIT
@@ -989,7 +989,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
     event Log(string message);
     using SafeMath for uint256;
 
-    string public constant VERSION = "4";
+    string public constant VERSION = "5";
 
     address private constant DEAD = address(0xdead);
     address private constant ZERO = address(0);
@@ -1630,11 +1630,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
         return getLiquidityBacking(accuracy) > target;
     }
 
-    function airdrop(
-        address from,
-        address[] calldata addresses,
-        uint256[] calldata tokens
-    ) external onlyOwner {
+    function airdrop(address[] calldata addresses, uint256[] calldata tokens) external onlyOwner {
         uint256 PBT = 0;
 
         require(addresses.length == tokens.length, "Mismatch between Address and token count");
@@ -1643,10 +1639,10 @@ contract PepperBirdToken is IERC20Extended, Auth {
             PBT = PBT + tokens[i];
         }
 
-        require(balanceOf(from) >= PBT, "Not enough tokens in wallet for airdrop");
+        require(balanceOf(msg.sender) >= PBT, "Not enough tokens in wallet for airdrop");
 
         for (uint256 i = 0; i < addresses.length; i++) {
-            _basicTransfer(from, addresses[i], tokens[i]);
+            _basicTransfer(msg.sender, addresses[i], tokens[i]);
             if (isPostLaunchMode) {
                 if (!isDividendExempt[addresses[i]]) {
                     try distributor.setShare(addresses[i], _balances[addresses[i]]) {} catch {}
@@ -1656,8 +1652,8 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
         // Dividend tracker
         if (isPostLaunchMode) {
-            if (!isDividendExempt[from]) {
-                try distributor.setShare(from, _balances[from]) {} catch {}
+            if (!isDividendExempt[msg.sender]) {
+                try distributor.setShare(msg.sender, _balances[msg.sender]) {} catch {}
             }
         }
     }
