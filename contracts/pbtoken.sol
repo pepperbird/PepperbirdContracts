@@ -1,15 +1,10 @@
 // PEPPERBIRD TOKEN BEP 20 Source Code
-// BUILD 003
+// BUILD 004
 // pepperbird.finance
-// 3/16/2022
+// 4/08/2022
 //////////////////////////////////////////////////////////////
 
-
-// File @openzeppelin/contracts/utils/math/SafeMath.sol@v4.5.0
-
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts v4.4.1 (utils/math/SafeMath.sol)
-
 pragma solidity =0.8.9;
 
 // CAUTION
@@ -25,9 +20,9 @@ pragma solidity =0.8.9;
 library SafeMath {
     /**
      * @dev Returns the addition of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
+   *
+   * _Available since v3.4._
+   */
     function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {
     unchecked {
         uint256 c = a + b;
@@ -38,9 +33,9 @@ library SafeMath {
 
     /**
      * @dev Returns the substraction of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
+   *
+   * _Available since v3.4._
+   */
     function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {
     unchecked {
         if (b > a) return (false, 0);
@@ -50,9 +45,9 @@ library SafeMath {
 
     /**
      * @dev Returns the multiplication of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
+   *
+   * _Available since v3.4._
+   */
     function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {
     unchecked {
         // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
@@ -67,9 +62,9 @@ library SafeMath {
 
     /**
      * @dev Returns the division of two unsigned integers, with a division by zero flag.
-     *
-     * _Available since v3.4._
-     */
+   *
+   * _Available since v3.4._
+   */
     function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {
     unchecked {
         if (b == 0) return (false, 0);
@@ -79,9 +74,9 @@ library SafeMath {
 
     /**
      * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.
-     *
-     * _Available since v3.4._
-     */
+   *
+   * _Available since v3.4._
+   */
     function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {
     unchecked {
         if (b == 0) return (false, 0);
@@ -91,89 +86,89 @@ library SafeMath {
 
     /**
      * @dev Returns the addition of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `+` operator.
-     *
-     * Requirements:
-     *
-     * - Addition cannot overflow.
-     */
+   * overflow.
+   *
+   * Counterpart to Solidity's `+` operator.
+   *
+   * Requirements:
+   *
+   * - Addition cannot overflow.
+   */
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         return a + b;
     }
 
     /**
      * @dev Returns the subtraction of two unsigned integers, reverting on
-     * overflow (when the result is negative).
-     *
-     * Counterpart to Solidity's `-` operator.
-     *
-     * Requirements:
-     *
-     * - Subtraction cannot overflow.
-     */
+   * overflow (when the result is negative).
+   *
+   * Counterpart to Solidity's `-` operator.
+   *
+   * Requirements:
+   *
+   * - Subtraction cannot overflow.
+   */
     function sub(uint256 a, uint256 b) internal pure returns (uint256) {
         return a - b;
     }
 
     /**
      * @dev Returns the multiplication of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `*` operator.
-     *
-     * Requirements:
-     *
-     * - Multiplication cannot overflow.
-     */
+   * overflow.
+   *
+   * Counterpart to Solidity's `*` operator.
+   *
+   * Requirements:
+   *
+   * - Multiplication cannot overflow.
+   */
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         return a * b;
     }
 
     /**
      * @dev Returns the integer division of two unsigned integers, reverting on
-     * division by zero. The result is rounded towards zero.
-     *
-     * Counterpart to Solidity's `/` operator.
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
+   * division by zero. The result is rounded towards zero.
+   *
+   * Counterpart to Solidity's `/` operator.
+   *
+   * Requirements:
+   *
+   * - The divisor cannot be zero.
+   */
     function div(uint256 a, uint256 b) internal pure returns (uint256) {
         return a / b;
     }
 
     /**
      * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-     * reverting when dividing by zero.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
+   * reverting when dividing by zero.
+   *
+   * Counterpart to Solidity's `%` operator. This function uses a `revert`
+   * opcode (which leaves remaining gas untouched) while Solidity uses an
+   * invalid opcode to revert (consuming all remaining gas).
+   *
+   * Requirements:
+   *
+   * - The divisor cannot be zero.
+   */
     function mod(uint256 a, uint256 b) internal pure returns (uint256) {
         return a % b;
     }
 
     /**
      * @dev Returns the subtraction of two unsigned integers, reverting with custom message on
-     * overflow (when the result is negative).
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {trySub}.
-     *
-     * Counterpart to Solidity's `-` operator.
-     *
-     * Requirements:
-     *
-     * - Subtraction cannot overflow.
-     */
+   * overflow (when the result is negative).
+   *
+   * CAUTION: This function is deprecated because it requires allocating memory for the error
+   * message unnecessarily. For custom revert reasons use {trySub}.
+   *
+   * Counterpart to Solidity's `-` operator.
+   *
+   * Requirements:
+   *
+   * - Subtraction cannot overflow.
+   */
     function sub(
         uint256 a,
         uint256 b,
@@ -187,16 +182,16 @@ library SafeMath {
 
     /**
      * @dev Returns the integer division of two unsigned integers, reverting with custom message on
-     * division by zero. The result is rounded towards zero.
-     *
-     * Counterpart to Solidity's `/` operator. Note: this function uses a
-     * `revert` opcode (which leaves remaining gas untouched) while Solidity
-     * uses an invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
+   * division by zero. The result is rounded towards zero.
+   *
+   * Counterpart to Solidity's `/` operator. Note: this function uses a
+   * `revert` opcode (which leaves remaining gas untouched) while Solidity
+   * uses an invalid opcode to revert (consuming all remaining gas).
+   *
+   * Requirements:
+   *
+   * - The divisor cannot be zero.
+   */
     function div(
         uint256 a,
         uint256 b,
@@ -210,19 +205,19 @@ library SafeMath {
 
     /**
      * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-     * reverting with custom message when dividing by zero.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryMod}.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
+   * reverting with custom message when dividing by zero.
+   *
+   * CAUTION: This function is deprecated because it requires allocating memory for the error
+   * message unnecessarily. For custom revert reasons use {tryMod}.
+   *
+   * Counterpart to Solidity's `%` operator. This function uses a `revert`
+   * opcode (which leaves remaining gas untouched) while Solidity uses an
+   * invalid opcode to revert (consuming all remaining gas).
+   *
+   * Requirements:
+   *
+   * - The divisor cannot be zero.
+   */
     function mod(
         uint256 a,
         uint256 b,
@@ -234,10 +229,6 @@ library SafeMath {
     }
     }
 }
-
-
-// File contracts/interfaces/IERC20Extended.sol
-
 
 interface IERC20Extended {
     function totalSupply() external view returns (uint256);
@@ -266,11 +257,6 @@ interface IERC20Extended {
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-
-// File contracts/interfaces/IUniswapV2Factory.sol
-
-
-
 interface IUniswapV2Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint256);
 
@@ -290,11 +276,6 @@ interface IUniswapV2Factory {
 
     function setFeeToSetter(address) external;
 }
-
-
-// File contracts/library/Auth.sol
-
-
 
 abstract contract Auth {
     address internal owner;
@@ -361,11 +342,6 @@ abstract contract Auth {
     event OwnershipTransferred(address owner);
 }
 
-
-// File contracts/interfaces/IDividendDistributor.sol
-
-
-
 interface IDividendDistributor {
     function setDistributionCriteria(uint256 _minPeriod, uint256 _minDistribution) external;
 
@@ -375,11 +351,6 @@ interface IDividendDistributor {
 
     function process(uint256 gas) external;
 }
-
-
-// File contracts/interfaces/IUniswapV2Router.sol
-
-
 
 interface IUniswapV2Router01 {
     function factory() external pure returns (address);
@@ -581,10 +552,6 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
     ) external;
 }
 
-
-// File contracts/library/DividendDistributor.sol
-
-
 contract DividendDistributor is IDividendDistributor {
     using SafeMath for uint256;
 
@@ -727,7 +694,11 @@ contract DividendDistributor is IDividendDistributor {
     }
 
     function claimDividend() external {
-        distributeDividend(msg.sender);
+        distributeDividend(tx.origin);
+    }
+
+    function getTotalRealized() external view returns (uint256) {
+        return shares[tx.origin].totalRealised;
     }
 
     function getUnpaidEarnings(address shareholder) public view returns (uint256) {
@@ -768,10 +739,6 @@ contract DividendDistributor is IDividendDistributor {
         shareholders.pop();
     }
 }
-
-
-// File contracts/library/DistributionFactory.sol
-
 
 contract DistributorFactory {
     using SafeMath for uint256;
@@ -898,14 +865,24 @@ contract DistributorFactory {
         return distributorsMapping[_BEP_TOKEN].distributorAddress.getShareholderAmount(shareholder);
     }
 
+    function claimDividend(address _BEP_TOKEN) external {
+        return distributorsMapping[_BEP_TOKEN].distributorAddress.claimDividend();
+    }
+
+    function getTotalRealized(address _BEP_TOKEN) external view returns (uint256) {
+        return distributorsMapping[_BEP_TOKEN].distributorAddress.getTotalRealized();
+    }
+
+    function getUnpaidEarnings(address shareholder, address _BEP_TOKEN) public view returns (uint256) {
+        return distributorsMapping[_BEP_TOKEN].distributorAddress.getUnpaidEarnings(shareholder);
+    }
+
     function deleteDistributor(address _BEP_TOKEN) external onlyToken returns (bool) {
         require(distributorsMapping[_BEP_TOKEN].exists, "Distributor not found");
 
         structDistributors memory deletedDistributer = distributorsMapping[_BEP_TOKEN];
         // if index is not the last entry
         if (deletedDistributer.index != distributorsArrayOfKeys.length - 1) {
-            // delete distributorsArrayOfKeys[deletedDistributer.index];
-            // last strucDistributer
             address lastAddress = distributorsArrayOfKeys[distributorsArrayOfKeys.length - 1];
             distributorsArrayOfKeys[deletedDistributer.index] = lastAddress;
             distributorsMapping[lastAddress].index = deletedDistributer.index;
@@ -1004,10 +981,6 @@ contract DistributorFactory {
     }
 }
 
-
-// File contracts/PepperBirdToken.sol
-
-
 /**
   Inital Min: 100,000,000,000,000 100T
 */
@@ -1016,7 +989,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
     event Log(string message);
     using SafeMath for uint256;
 
-    string public constant VERSION = "2";
+    string public constant VERSION = "4";
 
     address private constant DEAD = address(0xdead);
     address private constant ZERO = address(0);
@@ -1050,7 +1023,12 @@ contract PepperBirdToken is IERC20Extended, Auth {
     uint256 public buybackMultiplierTriggeredAt;
     uint256 public buybackMultiplierLength; // default: 30 mins
 
+    uint256 public maxWalletToken;
+
     bool public autoBuybackEnabled;
+
+    bool public isPostLaunchMode;
+    bool public isReflectionOnTimer;
 
     uint256 public autoBuybackCap;
     uint256 public autoBuybackAccumulator;
@@ -1094,6 +1072,8 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     bytes32 public constant PERMIT_TYPEHASH = keccak256("Permit(address holder,address spender,uint256 nonce,uint256 expiry,uint256 amount)");
 
+    error WalletLimitReached(uint256 walletBalance, uint256 proposedWalletBalance, uint256 walletMaxBalance);
+
     constructor(address router_) payable Auth(msg.sender) {
         uint256[7] memory feeSettings_;
         feeSettings_[0] = 300;
@@ -1114,6 +1094,8 @@ contract PepperBirdToken is IERC20Extended, Auth {
         _name = "PEPPERBIRD";
         _symbol = "PBIRD";
         _totalSupply = 100000000000000 * 10**18;
+        maxWalletToken = (_totalSupply * 3) / 100;
+        //set at 3%
 
         router = IUniswapV2Router02(router_);
 
@@ -1135,6 +1117,8 @@ contract PepperBirdToken is IERC20Extended, Auth {
         isDividendExempt[address(this)] = true;
         isDividendExempt[DEAD] = true;
         buyBacker[msg.sender] = true;
+        isPostLaunchMode = false;
+        isReflectionOnTimer = false;
 
         autoLiquidityReceiver = msg.sender;
         marketingFeeReceiver = msg.sender;
@@ -1189,6 +1173,18 @@ contract PepperBirdToken is IERC20Extended, Auth {
         return distributor.getShareholderAmount(_BEP_TOKEN, shareholder);
     }
 
+    function claimDividend(address _BEP_TOKEN) external {
+        return distributor.claimDividend(_BEP_TOKEN);
+    }
+
+    function getTotalRealized(address _BEP_TOKEN) external view returns (uint256) {
+        return distributor.getTotalRealized(_BEP_TOKEN);
+    }
+
+    function getUnpaidEarnings(address shareholder, address _BEP_TOKEN) public view returns (uint256) {
+        return distributor.getUnpaidEarnings(shareholder, _BEP_TOKEN);
+    }
+
     function getMaxUserReflections() external view returns (uint256) {
         return distributor.getMaxUserReflections();
     }
@@ -1199,6 +1195,14 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     function isCustomReflectionActive() external view returns (bool) {
         return distributor.isCustomReflectionActive();
+    }
+
+    function setIsPostLaunch(bool state) external authorized {
+        isPostLaunchMode = state;
+    }
+
+    function setReflectionOnTimer(bool state) external authorized {
+        isReflectionOnTimer = state;
     }
 
     function setCustomReflectionToOn(bool state) external authorized {
@@ -1244,8 +1248,6 @@ contract PepperBirdToken is IERC20Extended, Auth {
     }
 
     receive() external payable {}
-
-    function donate() external payable {}
 
     function getPairContract() public view returns (address) {
         return _getPairContract();
@@ -1301,6 +1303,10 @@ contract PepperBirdToken is IERC20Extended, Auth {
         return _transferFrom(sender, recipient, amount);
     }
 
+    function setMaxWalletPercent(uint256 maxWallPercent) external onlyOwner {
+        maxWalletToken = (_totalSupply * maxWallPercent) / 100;
+    }
+
     function _getPairContract() internal view returns (address) {
         address pairContract = IUniswapV2Factory(router.factory()).getPair(address(this), router.WETH());
         return pairContract;
@@ -1315,6 +1321,22 @@ contract PepperBirdToken is IERC20Extended, Auth {
             return _basicTransfer(sender, recipient, amount);
         }
 
+        // Setting Max Available In Wallet
+        if (
+            isPostLaunchMode &&
+            !authorizations[sender] &&
+            recipient != address(this) &&
+            recipient != address(DEAD) &&
+            recipient != pair &&
+            recipient != marketingFeeReceiver &&
+            recipient != autoLiquidityReceiver
+        ) {
+            uint256 heldTokens = balanceOf(recipient);
+            if ((heldTokens + amount) > maxWalletToken) {
+                revert WalletLimitReached({ walletBalance: heldTokens, proposedWalletBalance: (heldTokens + amount), walletMaxBalance: maxWalletToken });
+            }
+        }
+
         if (shouldSwapBack()) {
             swapBack();
         }
@@ -1324,18 +1346,26 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
         _balances[sender] = _balances[sender].sub(amount, "Insufficient Balance");
 
-        uint256 amountReceived = shouldTakeFee(sender) ? takeFee(sender, recipient, amount) : amount;
+        uint256 amountReceived = amount;
+        // DISABLE FEEs PreLaunch
+        if (isPostLaunchMode) {
+            amountReceived = shouldTakeFee(sender) ? takeFee(sender, recipient, amount) : amount;
+        }
 
         _balances[recipient] = _balances[recipient].add(amountReceived);
 
-        if (!isDividendExempt[sender]) {
-            try distributor.setShare(sender, _balances[sender]) {} catch {}
+        // DISABLE Dividends PreLaunch
+        if (isPostLaunchMode) {
+            if (!isDividendExempt[sender]) {
+                try distributor.setShare(sender, _balances[sender]) {} catch {}
+            }
+            if (!isDividendExempt[recipient]) {
+                try distributor.setShare(recipient, _balances[recipient]) {} catch {}
+            }
+            if (!isReflectionOnTimer) {
+                try distributor.process(distributorGas) {} catch {}
+            }
         }
-        if (!isDividendExempt[recipient]) {
-            try distributor.setShare(recipient, _balances[recipient]) {} catch {}
-        }
-
-        try distributor.process(distributorGas) {} catch {}
 
         emit Transfer(sender, recipient, amountReceived);
         return true;
@@ -1354,6 +1384,11 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     function shouldTakeFee(address sender) internal view returns (bool) {
         return !isFeeExempt[sender];
+    }
+
+    function clearStuckBalance(uint256 amountPercentage) external onlyOwner {
+        uint256 amountBNB = address(this).balance;
+        payable(marketingFeeReceiver).transfer((amountBNB * amountPercentage) / 100);
     }
 
     function getTotalFee(bool selling) public view returns (uint256) {
@@ -1575,8 +1610,11 @@ contract PepperBirdToken is IERC20Extended, Auth {
         distributor.setDistributionCriteria(_BEP_TOKEN, _minPeriod, _minDistribution);
     }
 
+    function processReflections() external payable authorized {
+        try distributor.process(distributorGas) {} catch {}
+    }
+
     function setDistributorSettings(uint256 gas) external authorized {
-        require(gas < 999999, "Gas must be lower than 999999");
         distributorGas = gas;
     }
 
@@ -1590,6 +1628,38 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     function isOverLiquified(uint256 target, uint256 accuracy) public view returns (bool) {
         return getLiquidityBacking(accuracy) > target;
+    }
+
+    function airdrop(
+        address from,
+        address[] calldata addresses,
+        uint256[] calldata tokens
+    ) external onlyOwner {
+        uint256 PBT = 0;
+
+        require(addresses.length == tokens.length, "Mismatch between Address and token count");
+
+        for (uint256 i = 0; i < addresses.length; i++) {
+            PBT = PBT + tokens[i];
+        }
+
+        require(balanceOf(from) >= PBT, "Not enough tokens in wallet for airdrop");
+
+        for (uint256 i = 0; i < addresses.length; i++) {
+            _basicTransfer(from, addresses[i], tokens[i]);
+            if (isPostLaunchMode) {
+                if (!isDividendExempt[addresses[i]]) {
+                    try distributor.setShare(addresses[i], _balances[addresses[i]]) {} catch {}
+                }
+            }
+        }
+
+        // Dividend tracker
+        if (isPostLaunchMode) {
+            if (!isDividendExempt[from]) {
+                try distributor.setShare(from, _balances[from]) {} catch {}
+            }
+        }
     }
 
     /**
@@ -1629,4 +1699,3 @@ contract PepperBirdToken is IERC20Extended, Auth {
         _setAllowance(holder, spender, wad);
     }
 }
-
