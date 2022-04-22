@@ -1,8 +1,13 @@
+// PEPPERBIRD Private Sale Source Code
+// BUILD 002
+// pepperbird.finance
+// 4/21/2022
+//////////////////////////////////////////////////////////////
 
+// SPDX-License-Identifier: MIT
+// OpenZeppelin Contracts v4.4.1 (utils/math/SafeMath.sol)
 
-//SPDX-License-Identifier: Unlicense
 pragma solidity =0.8.9;
-
 
 // CAUTION
 // This version of SafeMath should only be used with Solidity 0.8 or later,
@@ -228,6 +233,8 @@ library SafeMath {
 }
 
 
+
+
 /**
  * @dev Provides information about the current execution context, including the
  * sender of the transaction and its data. While these are generally available
@@ -247,6 +254,8 @@ abstract contract Context {
         return msg.data;
     }
 }
+
+
 
 
 /**
@@ -320,6 +329,9 @@ abstract contract Ownable is Context {
 }
 
 
+
+
+
 interface IBEP20 {
     function balanceOf(address account) external view returns (uint256);
 
@@ -348,14 +360,15 @@ contract PepperBirdPrivateSale is Ownable {
 
     address[] private _privateSale;
 
-    uint256 public privateSaleAllocation = 7_560_000_000_000 * 10**18; //Amount in Private Sale
+    uint256 public privateSaleAllocation = 6_400_000_000_000 * 10**18; //Amount in Private Sale
     uint256 public privateSaleDistributed;
     uint256 private _newPaymentInterval = 864000; // 10 Days -  millieseconds 864000
     uint256 private _initialLock = 31536000; // Initial lock 1 year after buy. Time is reset to _newPaymentInterval when Private Sale Ends
     uint256 private _privateSaleHoldingCap = 216_000_000_000 * 10**18; //Max Buy Per Person
     uint256 public minimumPurchaseInBNB = 200000000000000000; // .2 BNB
-    uint256 private _PBTPrivateSalePrice = 54_000_000_000; // current price as per the time of private sale
+    uint256 private _PBTPrivateSalePrice = 50_000_000_000; // current price as per the time of private sale
     uint256 paymentIntervals = 2; // intervals until payment is complete
+    bool public contractActive = false;
 
     mapping(address => bool) public operators;
 
@@ -487,6 +500,10 @@ contract PepperBirdPrivateSale is Ownable {
             amount = holder.paymentIntervalCredit;
         }
         return amount;
+    }
+
+    function setContractStatus(bool _status) external onlyOwner {
+        contractActive = _status;
     }
 
     function userTokenRedemption() external {
