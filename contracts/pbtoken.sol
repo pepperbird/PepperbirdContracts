@@ -1,7 +1,7 @@
 // PEPPERBIRD TOKEN BEP 20 Source Code
-// BUILD 006
+// BUILD 007
 // pepperbird.finance
-// 4/17/2022
+// 4/28/2022
 //////////////////////////////////////////////////////////////
 
 // SPDX-License-Identifier: MIT
@@ -254,6 +254,7 @@ interface IERC20Extended {
     ) external returns (bool);
 
     event Transfer(address indexed from, address indexed to, uint256 value);
+    event Burn(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
@@ -305,14 +306,14 @@ abstract contract Auth {
     /**
      * Authorize address. Owner only
      */
-    function authorize(address adr) public onlyOwner {
+    function authorize(address adr) external onlyOwner {
         authorizations[adr] = true;
     }
 
     /**
      * Remove address' authorization. Owner only
      */
-    function unauthorize(address adr) public onlyOwner {
+    function unauthorize(address adr) external onlyOwner {
         authorizations[adr] = false;
     }
 
@@ -567,13 +568,13 @@ contract DividendDistributor is IDividendDistributor {
     uint256 public totalDividends;
     uint256 public totalDistributed;
     uint256 public dividendsPerShare;
-    uint256 public dividendsPerShareAccuracyFactor = 10**36;
+    uint256 public constant dividendsPerShareAccuracyFactor = 10**36;
 
     uint256 public minPeriod = 1 hours;
     uint256 public minDistribution = 1 * (10**18);
 
     uint256 currentIndex;
-    address pancakeSwapV2Router = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
+    address constant pancakeSwapV2Router = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
 
     bool initialized;
     modifier initialization() {
@@ -779,7 +780,7 @@ contract DistributorFactory {
         uint256 arrayLength = _reflectionAddresses.length;
         for (uint256 i = 0; i < arrayLength; i++) {
             if (!distributorsMapping[_reflectionAddresses[i]].exists) {
-                state = false;
+                return false;
             }
         }
 
@@ -811,14 +812,12 @@ contract DistributorFactory {
                 customReflectionMapping[_owner].index = 0;
             }
             customReflectionMapping[_owner].exists = true;
-            for (uint256 i = 0; i < arrayLength; i++) {
-                customReflectionMapping[_owner].reflection_tokens.push(_reflectionAddresses[i]);
-            }
-        } else {
-            for (uint256 i = 0; i < arrayLength; i++) {
-                customReflectionMapping[_owner].reflection_tokens.push(_reflectionAddresses[i]);
-            }
         }
+
+        for (uint256 i = 0; i < arrayLength; i++) {
+            customReflectionMapping[_owner].reflection_tokens.push(_reflectionAddresses[i]);
+        }
+
         return true;
     }
 
@@ -872,7 +871,7 @@ contract DistributorFactory {
         return distributorsMapping[_BEP_TOKEN].distributorAddress.getTotalRealized();
     }
 
-    function getUnpaidEarnings(address shareholder, address _BEP_TOKEN) public view returns (uint256) {
+    function getUnpaidEarnings(address shareholder, address _BEP_TOKEN) external view returns (uint256) {
         return distributorsMapping[_BEP_TOKEN].distributorAddress.getUnpaidEarnings(shareholder);
     }
 
@@ -891,16 +890,16 @@ contract DistributorFactory {
         return true;
     }
 
-    function getDistributorsAddresses() public view returns (address[] memory) {
+    function getDistributorsAddresses() external view returns (address[] memory) {
         return distributorsArrayOfKeys;
     }
 
     function useCustomReflection(address _shareholder) internal view returns (bool) {
         bool state = true;
-        if (customReflectionsOn == false) {
+        if (!customReflectionsOn) {
             state = false;
         } else {
-            if (customReflectionMapping[_shareholder].exists == false) {
+            if (!customReflectionMapping[_shareholder].exists) {
                 state = false;
             }
         }
@@ -913,7 +912,7 @@ contract DistributorFactory {
 
     function setShare(address shareholder, uint256 amount) external onlyToken {
         uint256 arrayLength = distributorsArrayOfKeys.length;
-        if (useCustomReflection(shareholder) == true) {
+        if (useCustomReflection(shareholder)) {
             for (uint256 i = 0; i < arrayLength; i++) {
                 // Looping through master set of reflections
                 for (uint256 j = 0; j < customReflectionMapping[shareholder].reflection_tokens.length; j++) {
@@ -948,15 +947,15 @@ contract DistributorFactory {
         }
     }
 
-    function getDistributor(address _BEP_TOKEN) public view returns (DividendDistributor) {
+    function getDistributor(address _BEP_TOKEN) external view returns (DividendDistributor) {
         return distributorsMapping[_BEP_TOKEN].distributorAddress;
     }
 
-    function getTotalDistributers() public view returns (uint256) {
+    function getTotalDistributers() external view returns (uint256) {
         return distributorsArrayOfKeys.length;
     }
 
-    function getMaxUserReflections() public view returns (uint256) {
+    function getMaxUserReflections() external view returns (uint256) {
         return maxCustomReflections;
     }
 
@@ -964,7 +963,7 @@ contract DistributorFactory {
         maxCustomReflections = _maxReflections;
     }
 
-    function isCustomReflectionActive() public view returns (bool) {
+    function isCustomReflectionActive() external view returns (bool) {
         return customReflectionsOn;
     }
 
@@ -988,8 +987,7 @@ contract DistributorFactory {
 contract PepperBirdToken is IERC20Extended, Auth {
     event Log(string message);
     using SafeMath for uint256;
-
-    string public constant VERSION = "6";
+    string public contractVersion = "7";
 
     address private constant DEAD = address(0xdead);
     address private constant ZERO = address(0);
@@ -1037,7 +1035,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
     uint256 public autoBuybackBlockLast;
     address public futureOwnershipTransferAddress;
     uint256 private _futureOwnershipTransferAddressInitTime;
-    uint256 public timeToClearNewOwnershipAddress = 172800000; // 48 Hours in Milliseconds
+    uint256 public constant timeToClearNewOwnershipAddress = 172800000; // 48 Hours in Milliseconds
 
     DistributorFactory distributor;
 
@@ -1066,19 +1064,25 @@ contract PepperBirdToken is IERC20Extended, Auth {
     }
 
     modifier onlyBuybacker() {
-        require(buyBacker[msg.sender] == true, "Not a buybacker");
+        require(buyBacker[msg.sender], "Not a buybacker");
         _;
     }
 
     // --- EIP712 niceties ---
     bytes32 public DOMAIN_SEPARATOR;
 
-    bytes32 public constant PERMIT_TYPEHASH = keccak256("Permit(address holder,address spender,uint256 nonce,uint256 expiry,uint256 amount)");
+    bytes32 public constant PERMIT_TYPEHASH = keccak256("Permit(address holder,address spender,uint256 nonce,uint256 expiry,bool allowed)");
 
     error WalletLimitReached(uint256 walletBalance, uint256 proposedWalletBalance, uint256 walletMaxBalance);
     error TransferAddressNotWhitelisted(address transferAddress);
 
     event OwnershipTransferred(address owner);
+    event DistributionCriteriaUpdated(address indexed bepToken, uint256 minPeriod, uint256 minDistribution);
+    event MaxNumberReflectionUpdated(uint256 amount);
+    event AutoBuyBackSettingsUpdated(bool enabled, uint256 cap, uint256 amount, uint256 period);
+    event BuyBackMultiplierSettingsUpdated(uint256 numerator, uint256 deonimator, uint256 length);
+    event SwapBackSettingsUpdated(bool enabled, uint256 amount);
+    event TargetLiquidityUpdated(uint256 target, uint256 denominator);
 
     constructor(address router_) payable Auth(msg.sender) {
         uint256[7] memory feeSettings_;
@@ -1187,7 +1191,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
         return distributor.getTotalRealized(_BEP_TOKEN);
     }
 
-    function getUnpaidEarnings(address shareholder, address _BEP_TOKEN) public view returns (uint256) {
+    function getUnpaidEarnings(address shareholder, address _BEP_TOKEN) external view returns (uint256) {
         return distributor.getUnpaidEarnings(shareholder, _BEP_TOKEN);
     }
 
@@ -1197,6 +1201,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     function setMaxUserReflections(uint256 amount) external authorized {
         distributor.setMaxUserReflection(amount);
+        emit MaxNumberReflectionUpdated(amount);
     }
 
     function isCustomReflectionActive() external view returns (bool) {
@@ -1255,7 +1260,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     receive() external payable {}
 
-    function getPairContract() public view returns (address) {
+    function getPairContract() external view returns (address) {
         return _getPairContract();
     }
 
@@ -1314,11 +1319,12 @@ contract PepperBirdToken is IERC20Extended, Auth {
         _futureOwnershipTransferAddressInitTime = block.timestamp.add(timeToClearNewOwnershipAddress);
     }
 
-    function setMaxWalletPercent(uint256 maxWallPercent) external onlyOwner {
-        maxWalletToken = (_totalSupply * maxWallPercent) / 100;
+    function setMaxWalletPercent(uint256 _maxWalletPercent) external onlyOwner {
+        require(_maxWalletPercent >= 3, "Max wallet can not be less than 3%");
+        maxWalletToken = (_totalSupply * _maxWalletPercent) / 100;
     }
 
-    function transferOwnership(address payable adr) public onlyOwner {
+    function transferOwnership(address payable adr) external onlyOwner {
         if (!_isTransferAddressConfirmed(adr)) {
             revert TransferAddressNotWhitelisted({ transferAddress: adr });
         }
@@ -1338,6 +1344,24 @@ contract PepperBirdToken is IERC20Extended, Auth {
             _state = true;
         }
         return _state;
+    }
+
+    function burn(uint256 amount) public virtual {
+        _burn(msg.sender, amount);
+    }
+
+    function _burn(address account, uint256 amount) internal virtual {
+        require(account != address(0), "ERC20: burn from the zero address");
+
+        uint256 accountBalance = _balances[account];
+        require(accountBalance >= amount, "ERC20: burn amount exceeds balance");
+    unchecked {
+        _balances[account] = accountBalance - amount;
+    }
+        _totalSupply -= amount;
+
+        emit Transfer(account, address(0), amount);
+        emit Burn(account, address(0), amount);
     }
 
     function _transferFrom(
@@ -1428,7 +1452,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
 
     /// @dev Setting the version as a function so that it can be overriden
     function version() public pure virtual returns (string memory) {
-        return VERSION;
+        return "1";
     }
 
     function getChainID() external view returns (uint256) {
@@ -1544,6 +1568,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
         autoBuybackAmount = _amount;
         autoBuybackBlockPeriod = _period;
         autoBuybackBlockLast = block.number;
+        emit AutoBuyBackSettingsUpdated(_enabled, _cap, _amount, _period);
     }
 
     function setBuybackMultiplierSettings(
@@ -1555,6 +1580,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
         buybackMultiplierNumerator = numerator;
         buybackMultiplierDenominator = denominator;
         buybackMultiplierLength = length;
+        emit BuyBackMultiplierSettingsUpdated(numerator, denominator, length);
     }
 
     function setIsDividendExempt(address holder, bool exempt) external authorized {
@@ -1583,7 +1609,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
         uint256 _charityFee,
         uint256 _gasWalletFee,
         uint256 _feeDenominator
-    ) public authorized {
+    ) external authorized {
         _setFees(_liquidityFee, _buybackFee, _reflectionFee, _marketingFee, _charityFee, _gasWalletFee, _feeDenominator);
     }
 
@@ -1623,18 +1649,20 @@ contract PepperBirdToken is IERC20Extended, Auth {
     function setSwapBackSettings(bool _enabled, uint256 _amount) external authorized {
         swapEnabled = _enabled;
         swapThreshold = _amount;
+        emit SwapBackSettingsUpdated(_enabled, _amount);
     }
 
     function setTargetLiquidity(uint256 _target, uint256 _denominator) external authorized {
         targetLiquidity = _target;
         targetLiquidityDenominator = _denominator;
+        emit TargetLiquidityUpdated(_target, _denominator);
     }
 
     function addDefaultReflections(address[] memory _defaultReflectionAddresses) external authorized {
         distributor.addDefaultReflections(_defaultReflectionAddresses);
     }
 
-    function getDefaultReflections() public view returns (address[] memory) {
+    function getDefaultReflections() external view returns (address[] memory) {
         return distributor.getDefaultReflections();
     }
 
@@ -1644,6 +1672,7 @@ contract PepperBirdToken is IERC20Extended, Auth {
         uint256 _minDistribution
     ) external authorized {
         distributor.setDistributionCriteria(_BEP_TOKEN, _minPeriod, _minDistribution);
+        emit DistributionCriteriaUpdated(_BEP_TOKEN, _minPeriod, _minDistribution);
     }
 
     function processReflections() external authorized {
