@@ -1,5 +1,5 @@
 # PEPPERBIRD.FINANCE
-### BSC Mainnet Token Contract : 0x498BfD20E6aB3E0022b4d5B54f389e28014d0071
+### BSC Mainnet Token Contract : 0x77Ad5F358CD673FCA1673e20E928B3CcADC84706
 ### Website: https://pepperbird.finance/
 ### Telegram: http://t.me/pepperbird
 ### Inquiries: admin -at- pepperbird.finance
